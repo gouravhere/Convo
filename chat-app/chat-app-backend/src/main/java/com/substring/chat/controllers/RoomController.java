@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,22 +30,23 @@ public class RoomController {
 
     //create room
     @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody String roomId) {
-
-        if (roomRepository.findByRoomId(roomId) != null) {
-            //room is already there
-            return ResponseEntity.badRequest().body("Room already exists!");
-
+    public ResponseEntity<?> createRoom(@RequestBody Map<String, String> request) {
+        String roomId = request.get("roomId");
+        if (roomId == null || roomId.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Room ID is required!");
         }
 
+        if (roomRepository.findByRoomId(roomId) != null) {
+            return ResponseEntity.badRequest().body("Room already exists!");
+        }
 
-        //create new room
+        // Create new room with roomId
         Room room = new Room();
         room.setRoomId(roomId);
+        room.setMessages(new ArrayList<>());
         Room savedRoom = roomRepository.save(room);
-        return ResponseEntity.status(HttpStatus.CREATED).body(room);
-
-
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedRoom);
     }
 
 
