@@ -30,5 +30,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOrigins(AppConstants.FRONT_END_BASE_URL)
                 .withSockJS();
     }
-    // /chat endpoint par connection apka establish hoga
 }
